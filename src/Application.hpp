@@ -19,8 +19,6 @@ class Application {
         sf::RenderWindow window;
         sf::Event e;
 
-        std::vector<std::vector<int>> map;
-
         void handleKeyPresses();
         void handleKeyReleases();
         void handleMouseMotion();
