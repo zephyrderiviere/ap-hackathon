@@ -18,7 +18,6 @@ Application::Application(int const width, int const height, std::string title, s
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
     carte = lireNiveau(cheminNiveau);
 
-
     mainCharacter = Character("Main", 100, 10, 5, 2, 2, 5);
 
     serveur = lireAdresseServeur(workingDirectory);
@@ -193,6 +192,7 @@ void Application::render() {
     for(auto character : characters) {
     	if(abs((int)character.i - (int)mainCharacter.i) < mainCharacter.coins) {
         	character.draw(window);
+        	carte[character.i][character.j] = NONE;
         }
     }
 
