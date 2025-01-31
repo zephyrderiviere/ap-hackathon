@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
             if (message == "disconnecting") {
                 
                 players.erase(sender);
-                std::cout << prefix << senderID << " has successfully disconnected !\n";
+                std::cout << prefix << "Player" << senderID << " has successfully disconnected !\n";
                 
             
             }

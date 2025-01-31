@@ -1,16 +1,5 @@
 #include "Application.hpp"
-#include "Characters.hpp"
-#include "utils.hpp"
 #include "Networking.hpp"
-#include <SFML/Config.hpp>
-#include <SFML/Network/IpAddress.hpp>
-#include <SFML/Network/Packet.hpp>
-#include <SFML/Network/Socket.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <cstdio>
-#include <iostream>
-#include <stdexcept>
-#include <string>
 
 using namespace std;
 
@@ -192,7 +181,7 @@ void Application::render() {
     for(auto character : characters) {
     	if(abs((int)character.i - (int)mainCharacter.i) < mainCharacter.coins) {
         	character.draw(window);
-        	carte[character.i][character.j] = NONE;
+            carte[character.i][character.j] = NONE;
         }
     }
 

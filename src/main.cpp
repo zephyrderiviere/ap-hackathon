@@ -1,8 +1,4 @@
 #include "Application.hpp"
-#include <SFML/Config.hpp>
-#include <SFML/Network.hpp>
-#include <exception>
-#include "utils.hpp"
 
 
 int const width = TAILLE_CASE*LARGEUR_NIVEAU;
@@ -23,7 +19,7 @@ int main(int argc, char** argv) {
         e.what();
     }
 
-    
+
 
     return 0;
 }
