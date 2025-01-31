@@ -6,10 +6,12 @@
 #include <SFML/Config.hpp>
 #include <SFML/Window/Event.hpp>
 
-
+#include "Characters.hpp"
 
 
 class Application {
+    public:
+        std::vector<Character> characters;
     private:
         sf::RenderWindow window;
         sf::Event e;

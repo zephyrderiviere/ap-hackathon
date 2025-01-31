@@ -46,12 +46,14 @@ void Application::handleMouseButtonReleases() {
 
 
 void Application::update() {
-    
 }
 
 void Application::render() {
     window.clear();
-    
+    // Loop over characters and draw them
+    for(auto& c : characters) {
+        c.draw(window);
+    }
 
     window.display();
 }
