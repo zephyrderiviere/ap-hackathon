@@ -23,8 +23,8 @@ public:
     sf::Vector2i getPosition();
 
     sf::Int32 playerID;
-    sf::Uint32 i;
-    sf::Uint32 j;
+    sf::Int32 i;
+    sf::Int32 j;
     int coins;
 
 private:

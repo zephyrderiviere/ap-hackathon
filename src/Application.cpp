@@ -185,7 +185,7 @@ void Application::render() {
     }
 
     for(auto character : characters) {
-    	if(abs((int)character.i - (int)mainCharacter.i) < mainCharacter.coins) {
+    	if(abs(character.i - mainCharacter.i) + abs(character.j - mainCharacter.j) < mainCharacter.coins) {
         	character.draw(window);
             carte[character.i][character.j] = NONE;
         }
