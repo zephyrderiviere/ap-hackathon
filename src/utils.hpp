@@ -34,6 +34,6 @@ enum MapCodes {
 };
 
 vector<vector<int>> lireNiveau(std::string chemin);
-string lireAdresseServeur();
+string lireAdresseServeur(std::string&);
 
 #endif //UTILS_HPP

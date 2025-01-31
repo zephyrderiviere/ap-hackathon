@@ -24,7 +24,6 @@ int main(int argc, char** argv) {
     std::string mainDirectoryFilepath = std::string(argv[0]).substr(0, pos);
 
     try {
-        cout<<lireAdresseServeur()<<endl;
         Application app(width, height, title, "niveaux/niveau.lvl", mainDirectoryFilepath);
         init(app);
         app.run();
