@@ -1,6 +1,7 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
+#include <SFML/Network.hpp>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Config.hpp>
@@ -28,6 +29,9 @@ class Application {
         sf::Event e;
 
         std::string workingDirectory;
+
+        sf::UdpSocket socket;
+    
 
 
         void handleKeyPresses();

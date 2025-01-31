@@ -1,17 +1,30 @@
 #include "Application.hpp"
+#include "Characters.hpp"
 #include "utils.hpp"
 #include "Networking.hpp"
 #include <SFML/Config.hpp>
-#include <SFML/Network.hpp>
+#include <SFML/Network/IpAddress.hpp>
+#include <SFML/Network/Packet.hpp>
+#include <SFML/Network/Socket.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 
 Application::Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory)
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
     carte = lireNiveau(cheminNiveau);
-    serveur = lireAdresseServeur(workingDirectory);
+
+    sf::Packet p; p << "connecting";
+    socket.setBlocking(false);
+    socket.send(p, "localhost", 42069);
+    sf::IpAddress sender; sf::Uint16 x;
+    socket.receive(p, sender, x);
+    p >> x;
+    std::cout << x << '\n';
+    mainCharacter.playerID = x;
 }
 
 
@@ -66,7 +79,6 @@ void Application::handleMouseButtonReleases() {
 
 void Application::multiPlayerMenu() {
     char address[10000];
-    sf::UdpSocket socket;
     socket.setBlocking(false);
     sf::Font f;
     if (!f.loadFromFile(workingDirectory + "data/Movistar.ttf")) {
@@ -96,7 +108,29 @@ void Application::multiPlayerMenu() {
 
 
 void Application::update() {
+    sf::Packet p;
+    p << "info" << mainCharacter.i << mainCharacter.j;
+
+    socket.send(p, "localhost", 42069);
     
+    sf::IpAddress sender;
+    sf::Uint16 remoteport;
+    if (socket.receive(p, sender, remoteport) == sf::Socket::Done) {
+        int charID; p >> charID;
+        
+        sf::Vector2i charPos;
+        if (p >> charPos.x >> charPos.y) {
+            bool found = false;
+            for (Character& c : characters) {
+                if (c.playerID == charID && charID != mainCharacter.playerID) {
+                    c.i = charPos.x; c.j = charPos.y;
+                    found = true;
+                }
+            }
+            if (!found) characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
+        }
+    }
+
 }
 
 void Application::render() {
@@ -123,6 +157,10 @@ void Application::render() {
     		}
     		window.draw(rectangle);
     	}
+    }
+
+    for(auto character : characters) {
+        character.draw(window);
     }
 
     mainCharacter.draw(window);

@@ -6,6 +6,24 @@
 #include <iostream>
 #include <map>
 
+using namespace std;
+
+static string const prefix = "[SERVER-INFO] ";
+static sf::Uint8 nextID = 0;
+static std::map<sf::IpAddress, sf::Uint8> players;
+
+void connectPlayer() {
+
+}
+
+void disconnectPlayer() {
+
+}
+
+void sendPosition() {
+
+}
+
 
 
 int main(int argc, char** argv) {
@@ -24,26 +42,20 @@ int main(int argc, char** argv) {
     sf::IpAddress sender;
     sf::Uint16 remotePort;
 
-    std::map<sf::IpAddress, sf::Uint8> players;
     
-    sf::Vector2<float> pos;
+    sf::Vector2i pos;
     std::string message;
     sf::Packet p;
-                
-
-    std::string prefix = "[SERVER-INFO] ";
-
-    sf::Uint8 nextID = 0;
 
 
     while(isRunning) {
         if (server.receive(data, sender, remotePort) == sf::Socket::Done) {
+            p.clear();
+            data >> message;
             
-            
-            if (data >> message) {
+            if (message == "connecting") {
                 std::cout << prefix << message << '\n';
 
-                p.clear();
                 if (players.find(sender) == players.end()) {
                     players.insert(std::pair(sender, nextID));
 
@@ -54,10 +66,25 @@ int main(int argc, char** argv) {
                 }
                 server.send(p, sender, port);
             }
+
+
+            if (players.find(sender) == players.end()) {
+                continue;
+            }
+            int senderID = players.at(sender);
+
+            if (message == "disconnecting") {
+
+                players.erase(sender);
+                p << "Successfully disconnected !";
+                server.send(p, sender, port);
+            
+            }
+
             if (data >> pos.x >> pos.y) {
-                p.clear();
+
                 p << pos.x << pos.y;
-                std::cout << prefix << '(' << pos.x << ", " << pos.y << ")\n";
+                std::cout << prefix << "Player " << senderID << " is at " <<'(' << pos.x << ", " << pos.y << ")\n";
                 for (auto ip : players) {
                     server.send(p, ip.first, port);
                 }
@@ -67,4 +94,4 @@ int main(int argc, char** argv) {
     }
 
     return 0;
-}
+} 
