@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include <SFML/Graphics.hpp>
 #include "Combat.hpp"
+#include <SFML/System/Vector2.hpp>
 
 void Character::move(std::vector<std::vector<int>>& carte, int dx, int dy) {
     // If outside of carte, return
@@ -63,6 +64,6 @@ void Character::draw(sf::RenderWindow& window){
     window.draw(rect);
 }
 
-Position Character::getPosition() {
-	return {(int)i,(int)j};
+sf::Vector2i Character::getPosition() {
+	return sf::Vector2i(i,j);
 }

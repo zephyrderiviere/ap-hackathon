@@ -2,16 +2,13 @@
 #define CHARACTERS_HPP
 
 #include <SFML/Config.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <string>
 #include <list>
 #include <SFML/Graphics.hpp>
 #include "Combat.hpp"
 #include "utils.hpp"
 
-struct Position{
-	int i;
-	int j;
-};
 
 class Character {
 public:
@@ -26,18 +23,18 @@ public:
     void useItem();
     void draw(sf::RenderWindow& window);
     std::string name;
-    Position getPosition();
+    sf::Vector2i getPosition();
 
-    sf::Int8 playerID;
+    sf::Int32 playerID;
     sf::Uint32 i;
     sf::Uint32 j;
     std::list<Bullet> bullets; // Bullet vector
+    int coins;
 
 private:
     int hp;
     int damage;
     int defense;
-    int coins;
     int direction;
 
 };

@@ -12,19 +12,25 @@
 #include <stdexcept>
 #include <string>
 
+using namespace std;
 
 Application::Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory)
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
     carte = lireNiveau(cheminNiveau);
 
-    sf::Packet p; p << "connecting";
-    socket.setBlocking(false);
-    socket.send(p, "localhost", 42069);
-    sf::IpAddress sender; sf::Uint16 x;
-    socket.receive(p, sender, x);
-    p >> x;
-    std::cout << x << '\n';
-    mainCharacter.playerID = x;
+
+    mainCharacter = Character("Main", 100, 10, 5, 2, 2, 5);
+
+    serveur = lireAdresseServeur(workingDirectory);
+    connectToServer();
+}
+
+Application::~Application() {
+    sf::Packet p;
+    p << "disconnecting";
+    if (socket.send(p, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+        std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
+    }
 }
 
 
@@ -33,6 +39,7 @@ Application::Application(int const width, int const height, std::string title, s
 
 
 void Application::handleKeyPresses() {
+    sendDataToServeur();
     switch(e.key.code) {
         // Handle main character movement
         case sf::Keyboard::Key::Up: mainCharacter.move(carte,0,-1); break;
@@ -47,14 +54,32 @@ void Application::handleKeyPresses() {
 }
 
 void Application::sendDataToServeur() {
-	sf::UdpSocket socket;
-	Position p = mainCharacter.getPosition();
+
+    sf::Packet packet;
+    packet << "position" << mainCharacter.playerID << mainCharacter.i << mainCharacter.j;
+	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+		std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
+	}
+}
+
+void Application::connectToServer() {
 	sf::Packet packet;
 	packet << "connecting";
 
 	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
-		std::cerr << "Erreur lors de l'envoi du message." << std::endl;
+		std::cerr << "Erreur lors de l'envoi du message 1." << std::endl;
 	}
+
+    sf::IpAddress ip; sf::Uint16 port;
+    packet.clear();
+    if (socket.receive(packet, ip, port) != sf::Socket::Done) {
+        throw std::runtime_error("Unable to contact server properly");
+    }
+    packet >> mainCharacter.playerID; 
+    std::cout << (int) mainCharacter.playerID << '\n';
+
+
+    socket.setBlocking(false);
 }
 
 void Application::handleKeyReleases() {
@@ -117,32 +142,33 @@ void Application::update() {
             it = mainCharacter.bullets.erase(it); // Erase the bullet and get the next iterator
         } else {
             ++it; // Move to the next bullet
+        }
     }
-}
 
     sf::Packet p;
-    p << "info" << mainCharacter.i << mainCharacter.j;
-
-    socket.send(p, "localhost", 42069);
     
     sf::IpAddress sender;
     sf::Uint16 remoteport;
-    if (socket.receive(p, sender, remoteport) == sf::Socket::Done) {
-        int charID; p >> charID;
+    socket.receive(p, sender, remoteport);
+    //std::cout << sender << ", " << remoteport << '\n';
+
+    if (sender == serveur.ipAdresse) {
+        sf::Int32 charID; p >> charID;
         
         sf::Vector2i charPos;
         if (p >> charPos.x >> charPos.y) {
             bool found = false;
             for (Character& c : characters) {
-                if (c.playerID == charID && charID != mainCharacter.playerID) {
+                if (c.playerID == charID) {
                     c.i = charPos.x; c.j = charPos.y;
                     found = true;
                 }
             }
-            if (!found) characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
+            if (!found && charID != mainCharacter.playerID) {
+                characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
+            }
         }
     }
-
 }
 
 void Application::render() {
@@ -152,21 +178,26 @@ void Application::render() {
     	for(int j=0; j<LARGEUR_NIVEAU; j++) {
     		sf::RectangleShape rectangle({TAILLE_CASE, TAILLE_CASE});
     		rectangle.setPosition(j*TAILLE_CASE, i*TAILLE_CASE);
-    		rectangle.setFillColor(sf::Color::Black);
-    		switch(carte[i][j]) {
-    			case(WALL):
-    				rectangle.setFillColor(sf::Color::Blue);
-    				break;
-    			case(POTION):
-    				rectangle.setFillColor(sf::Color::Red);
-    				break;
-    			case(COIN):
-    				rectangle.setFillColor(sf::Color::Yellow);
-    				break;
-    			case(GRAAL):
-    				rectangle.setFillColor(sf::Color(100, 0, 100));
-    				break;
-    		}
+    		if(abs((int)i-(int)mainCharacter.i) < mainCharacter.coins && abs((int)j-(int)mainCharacter.j) < mainCharacter.coins) {
+    			rectangle.setFillColor(sf::Color::Black);
+	    		switch(carte[i][j]) {
+	    			case(WALL):
+	    				rectangle.setFillColor(sf::Color::Blue);
+	    				break;
+	    			case(POTION):
+	    				rectangle.setFillColor(sf::Color::Red);
+	    				break;
+	    			case(COIN):
+	    				rectangle.setFillColor(sf::Color::Yellow);
+	    				break;
+	    			case(GRAAL):
+	    				rectangle.setFillColor(sf::Color(100, 0, 100));
+	    				break;
+	    		}
+	    	}
+	    	else {
+	    		rectangle.setFillColor(sf::Color(100, 100, 100));
+	    	}
     		window.draw(rectangle);
     	}
     }
@@ -174,6 +205,11 @@ void Application::render() {
     mainCharacter.draw(window);
     for (auto bullet : mainCharacter.bullets) {
             bullet.draw(window);
+    }
+    for(auto character : characters) {
+    	if(abs((int)character.i - (int)mainCharacter.i) < mainCharacter.coins) {
+        	character.draw(window);
+        }
     }
 
 
@@ -201,8 +237,8 @@ void Application::run() {
                 default: break;
             }
         }
+        window.setFramerateLimit(60);
         update();
         render();
-        sendDataToServeur();
     }
 }

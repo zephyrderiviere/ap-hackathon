@@ -23,7 +23,7 @@ class Application {
     public:
         std::vector<Character> characters;
         Character mainCharacter;
-
+        vector<vector<int>> carte;
     private:
         sf::RenderWindow window;
         sf::Event e;
@@ -46,15 +46,15 @@ class Application {
         void update();
         void render();
         void sendDataToServeur();
-
-	vector<vector<int>> carte;
+        void connectToServer();
 	
 	serveurInfo serveur;
 
     public:
 
         Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory);
-
+        ~Application();
+        
         void run();
 };
 
