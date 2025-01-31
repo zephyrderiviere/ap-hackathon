@@ -13,10 +13,11 @@ Application::Application(int const width, int const height, std::string title, s
 
 void Application::handleKeyPresses() {
     switch(e.key.code) {
-        case sf::Keyboard::Key::E: {
-            printf("exemple !\n");
-            break;
-        }
+        // Handle main character movement
+        case sf::Keyboard::Key::Up: mainCharacter.move(-1, 0); break;
+        case sf::Keyboard::Key::Down: mainCharacter.move(1, 0); break;
+        case sf::Keyboard::Key::Left: mainCharacter.move(0, -1); break;
+        case sf::Keyboard::Key::Right: mainCharacter.move(0, 1); break;
 
         default: break;
     }
@@ -49,10 +50,6 @@ void Application::update() {
 
 void Application::render() {
     window.clear();
-    // Loop over characters and draw them
-    for(auto& c : characters) {
-        c.draw(window);
-    }
     
     for(int i=0; i<HAUTEUR_NIVEAU; i++) {
     	for(int j=0; j<LARGEUR_NIVEAU; j++) {
@@ -66,6 +63,8 @@ void Application::render() {
     		}
     	}
     }
+
+    mainCharacter.draw(window);
 
     window.display();
 }

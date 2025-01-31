@@ -14,12 +14,12 @@ using namespace std;
 class Application {
     public:
         std::vector<Character> characters;
+        Character mainCharacter;
     private:
         sf::RenderWindow window;
         sf::Event e;
 
         std::vector<std::vector<int>> map;
-
 
         void handleKeyPresses();
         void handleKeyReleases();

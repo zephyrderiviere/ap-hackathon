@@ -1,13 +1,10 @@
 #include "Characters.hpp"
+#include "utils.hpp"
 #include <SFML/Graphics.hpp>
 
-
-Character::Character(std::string name, int hp, int damage, int defense, int x, int y)
-    : name(name), hp(hp), damage(damage), defense(defense), x(x), y(y) {}
-
 void Character::move(int dx, int dy) {
-    x += dx;
-    y += dy;
+    i += dy;
+    j += dx;
 }
 
 void Character::attack() {
@@ -23,9 +20,8 @@ void Character::useItem() {
 }
 
 void Character::draw(sf::RenderWindow& window){
-    int size = 40;
-    sf::RectangleShape rect(sf::Vector2f(size, size));
-    rect.setPosition(x, y);
+    sf::RectangleShape rect(sf::Vector2f(TAILLE_CASE, TAILLE_CASE));
+    rect.setPosition(i*TAILLE_CASE, j*TAILLE_CASE);
     rect.setFillColor(sf::Color::Red);
     window.draw(rect);
 }

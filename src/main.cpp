@@ -10,8 +10,8 @@ std::string title = "Rogue Online";
 void init(Application& app){
     // Initialize the game
     // Add a main character
-    Character mainCharacter("Main", 100, 10, 5, 0, 0);
-    app.characters.push_back(mainCharacter);
+    Character mainCharacter("Main", 100, 10, 5, 2, 2);
+    app.mainCharacter = mainCharacter;
 }
 
 int main(int argc, char** argv) {
