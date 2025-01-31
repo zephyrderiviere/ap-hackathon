@@ -45,6 +45,10 @@ void Application::handleMouseButtonReleases() {
 /********************RENDER AND MAIN LOOP***************************/
 
 
+void Application::update() {
+    
+}
+
 void Application::render() {
     window.clear();
     
