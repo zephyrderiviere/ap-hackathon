@@ -1,6 +1,7 @@
 #include "Characters.hpp"
 #include "utils.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 
 void Character::move(std::vector<std::vector<int>>& map, int dx, int dy) {
     // If outside of map, return
@@ -49,6 +50,6 @@ void Character::draw(sf::RenderWindow& window){
     window.draw(rect);
 }
 
-Position Character::getPosition() {
-	return {i,j};
+sf::Vector2i Character::getPosition() {
+	return sf::Vector2i(i,j);
 }

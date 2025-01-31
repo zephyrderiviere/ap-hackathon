@@ -46,8 +46,7 @@ class Application {
         void update();
         void render();
         void sendDataToServeur();
-
-	vector<vector<int>> carte;
+        void connectToServer();
 	
 	serveurInfo serveur;
 

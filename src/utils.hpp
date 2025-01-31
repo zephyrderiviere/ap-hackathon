@@ -1,6 +1,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <SFML/Config.hpp>
 #define LARGEUR_NIVEAU 40
 #define HAUTEUR_NIVEAU 25
 
@@ -34,7 +35,7 @@ enum MapCodes {
 
 struct serveurInfo {
 	string ipAdresse;
-	int port;
+	sf::Uint16 port;
 };
 
 vector<vector<int>> lireNiveau(std::string chemin);

@@ -2,13 +2,10 @@
 #define CHARACTERS_HPP
 
 #include <SFML/Config.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <string>
 #include <SFML/Graphics.hpp>
 
-struct Position{
-	int i;
-	int j;
-};
 
 class Character {
 public:
@@ -23,7 +20,7 @@ public:
     void useItem();
     void draw(sf::RenderWindow& window);
     std::string name;
-    Position getPosition();
+    sf::Vector2i getPosition();
 
     sf::Int8 playerID;
     sf::Uint32 i;

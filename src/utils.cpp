@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include <SFML/Config.hpp>
 #include <stdexcept>
 
 using namespace std;
@@ -49,7 +50,7 @@ serveurInfo lireAdresseServeur(std::string& workingDirectory) {
     	std::getline(fichier, adresseServeur);
     	string port;
     	std::getline(fichier, port);
-    	int portInt = stoi(port);
+    	sf::Uint16 portInt = stoi(port);
 
     	fichier.close();
     	

@@ -16,7 +16,7 @@ void init(Application& app){
     app.mainCharacter = mainCharacter;
 }
 
-int main(int argc, char** argv) {       
+int main(int argc, char** argv) { 
 
     int pos = std::string(argv[0]).find("bin/game");
     std::string mainDirectoryFilepath = std::string(argv[0]).substr(0, pos);

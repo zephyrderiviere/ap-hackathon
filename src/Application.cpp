@@ -17,14 +17,9 @@ Application::Application(int const width, int const height, std::string title, s
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
     carte = lireNiveau(cheminNiveau);
 
-    sf::Packet p; p << "connecting";
     socket.setBlocking(false);
-    socket.send(p, "localhost", 42069);
-    sf::IpAddress sender; sf::Uint16 x;
-    socket.receive(p, sender, x);
-    p >> x;
-    std::cout << x << '\n';
-    mainCharacter.playerID = x;
+    serveur = lireAdresseServeur(workingDirectory);
+    connectToServer();
 }
 
 
@@ -45,8 +40,15 @@ void Application::handleKeyPresses() {
 }
 
 void Application::sendDataToServeur() {
-	sf::UdpSocket socket;
-	Position p = mainCharacter.getPosition();
+
+    sf::Packet packet;
+    packet << "info" << mainCharacter.i << mainCharacter.j;
+	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+		std::cerr << "Erreur lors de l'envoi du message." << std::endl;
+	}
+}
+
+void Application::connectToServer() {
 	sf::Packet packet;
 	packet << "connecting";
 
@@ -109,9 +111,6 @@ void Application::multiPlayerMenu() {
 
 void Application::update() {
     sf::Packet p;
-    p << "info" << mainCharacter.i << mainCharacter.j;
-
-    socket.send(p, "localhost", 42069);
     
     sf::IpAddress sender;
     sf::Uint16 remoteport;
