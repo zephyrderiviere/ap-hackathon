@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Characters.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
@@ -27,8 +28,11 @@ class Application {
 
         void update();
         void render();
+        void sendDataToServeur();
 
 	vector<vector<int>> carte;
+	
+	serveurInfo serveur;
 
     public:
 

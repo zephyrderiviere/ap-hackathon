@@ -4,6 +4,11 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
+struct Position{
+	int i;
+	int j;
+};
+
 class Character {
 public:
     // default constructor
@@ -17,6 +22,7 @@ public:
     void useItem();
     void draw(sf::RenderWindow& window);
     std::string name;
+    Position getPosition();
 
 private:
     int hp;

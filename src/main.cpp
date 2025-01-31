@@ -17,8 +17,6 @@ void init(Application& app){
 int main(int argc, char** argv) {
     try {
     
-    	cout<<lireAdresseServeur()<<endl;
-    
         Application app(width, height, title, "niveaux/niveau.lvl");
         init(app);
 

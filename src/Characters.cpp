@@ -25,3 +25,7 @@ void Character::draw(sf::RenderWindow& window){
     rect.setFillColor(sf::Color::Red);
     window.draw(rect);
 }
+
+Position Character::getPosition() {
+	return {i,j};
+}

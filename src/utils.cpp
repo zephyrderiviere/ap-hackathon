@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 vector<vector<int>> lireNiveau(std::string chemin) {
 
     std::ifstream fichier(chemin);
@@ -38,7 +37,7 @@ vector<vector<int>> lireNiveau(std::string chemin) {
     	return niveau;
 }
 
-string lireAdresseServeur() {
+serveurInfo lireAdresseServeur() {
 
     	std::ifstream fichier("./config.txt");
     	if (!fichier) {
@@ -47,8 +46,11 @@ string lireAdresseServeur() {
     	
     	string adresseServeur;
     	std::getline(fichier, adresseServeur);
+    	string port;
+    	std::getline(fichier, port);
+    	int portInt = stoi(port);
 
     	fichier.close();
     	
-    	return adresseServeur;
+    	return {adresseServeur, portInt};
 }

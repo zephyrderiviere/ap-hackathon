@@ -1,9 +1,11 @@
 #include "Application.hpp"
 #include "utils.hpp"
+#include <SFML/Network.hpp>
 
 Application::Application(int const width, int const height, std::string title, std::string cheminNiveau) 
     : window(sf::VideoMode(width, height), title) {
 	carte = lireNiveau(cheminNiveau);
+	serveur = lireAdresseServeur();
 }
 
 
@@ -21,6 +23,17 @@ void Application::handleKeyPresses() {
 
         default: break;
     }
+}
+
+void Application::sendDataToServeur() {
+	sf::UdpSocket socket;
+	Position p = mainCharacter.getPosition();
+	sf::Packet packet;
+	packet << "connecting";
+
+	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+		std::cerr << "Erreur lors de l'envoi du message." << std::endl;
+	}
 }
 
 void Application::handleKeyReleases() {
@@ -102,5 +115,6 @@ void Application::run() {
         }
         update();
         render();
+        sendDataToServeur();
     }
 }

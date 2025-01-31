@@ -20,7 +20,6 @@ enum FileCharacters {
 	GRAAL_CHAR = 'G'
 };
 
-
 enum MapCodes {
 	NONE,
 	WALL,
@@ -33,7 +32,13 @@ enum MapCodes {
 	BULLET,
 };
 
+struct serveurInfo {
+	string ipAdresse;
+	int port;
+};
+
 vector<vector<int>> lireNiveau(std::string chemin);
-string lireAdresseServeur();
+
+serveurInfo lireAdresseServeur();
 
 #endif //UTILS_HPP
