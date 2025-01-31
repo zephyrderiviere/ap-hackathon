@@ -5,9 +5,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Config.hpp>
 #include <SFML/Window/Event.hpp>
+#include <vector>
 
 #include "Characters.hpp"
 
+using namespace std;
 
 class Application {
     public:
@@ -28,11 +30,11 @@ class Application {
         void update();
         void render();
 
-
+	vector<vector<int>> carte;
 
     public:
 
-        Application(int const width, int const height, std::string title);
+        Application(int const width, int const height, std::string title, std::string cheminNiveau);
 
         void run();
 };

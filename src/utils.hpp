@@ -1,8 +1,10 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#define LARGEUR_NIVEAU 50
-#define HAUTEUR_NIVEAU 15
+#define LARGEUR_NIVEAU 40
+#define HAUTEUR_NIVEAU 25
+
+#define TAILLE_CASE 20
 
 #include <iostream>
 #include <fstream>
