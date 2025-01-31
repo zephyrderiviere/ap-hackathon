@@ -1,23 +1,11 @@
 #include "Application.hpp"
-#include "Characters.hpp"
-#include "utils.hpp"
 #include "Networking.hpp"
-#include <SFML/Config.hpp>
-#include <SFML/Network/IpAddress.hpp>
-#include <SFML/Network/Packet.hpp>
-#include <SFML/Network/Socket.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <cstdio>
-#include <iostream>
-#include <stdexcept>
-#include <string>
 
 using namespace std;
 
 Application::Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory)
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
     carte = lireNiveau(cheminNiveau);
-
 
     mainCharacter = Character("Main", 100, 10, 5, 2, 2, 5);
 
@@ -37,22 +25,6 @@ Application::~Application() {
 /***********************EVENT HANDLERS******************************/
 
 
-
-void Application::handleKeyPresses() {
-    sendDataToServeur();
-    switch(e.key.code) {
-        // Handle main character movement
-        case sf::Keyboard::Key::Up: mainCharacter.move(carte,0,-1); break;
-        case sf::Keyboard::Key::Down: mainCharacter.move(carte,0,1); break;
-        case sf::Keyboard::Key::Left: mainCharacter.move(carte,-1,0); break;
-        case sf::Keyboard::Key::Right: mainCharacter.move(carte,1,0); break;
-        // Handle main character attack
-        case sf::Keyboard::Key::Space: mainCharacter.attack(carte); break;
-
-        default: break;
-    }
-}
-
 void Application::sendDataToServeur() {
 
     sf::Packet packet;
@@ -60,6 +32,8 @@ void Application::sendDataToServeur() {
 	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
 		std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
 	}
+
+    //TODO send bullet info to server (if created)
 }
 
 void Application::connectToServer() {
@@ -73,13 +47,28 @@ void Application::connectToServer() {
     sf::IpAddress ip; sf::Uint16 port;
     packet.clear();
     if (socket.receive(packet, ip, port) != sf::Socket::Done) {
-        throw std::runtime_error("Unable to contact server properly");
+        throw std::runtime_error("Unable to contact server properly\n");
     }
     packet >> mainCharacter.playerID; 
     std::cout << (int) mainCharacter.playerID << '\n';
 
 
     socket.setBlocking(false);
+}
+
+void Application::handleKeyPresses() {
+    sendDataToServeur();
+    switch(e.key.code) {
+        // Handle main character movement
+        case sf::Keyboard::Key::Up: mainCharacter.move(carte,0,-1); break;
+        case sf::Keyboard::Key::Down: mainCharacter.move(carte,0,1); break;
+        case sf::Keyboard::Key::Left: mainCharacter.move(carte,-1,0); break;
+        case sf::Keyboard::Key::Right: mainCharacter.move(carte,1,0); break;
+        // Handle main character attack
+        case sf::Keyboard::Key::Space: mainCharacter.attack(carte); break;
+        
+        default: break;
+    }
 }
 
 void Application::handleKeyReleases() {
@@ -152,7 +141,9 @@ void Application::update() {
     socket.receive(p, sender, remoteport);
     //std::cout << sender << ", " << remoteport << '\n';
 
-    if (sender == serveur.ipAdresse) {
+    if (sender != serveur.ipAdresse) return;
+    std::string message; p >> message;
+    if (message == "position") {
         sf::Int32 charID; p >> charID;
         
         sf::Vector2i charPos;
@@ -168,6 +159,9 @@ void Application::update() {
                 characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
             }
         }
+    }
+    if (message == "bullet") {
+        //TODO
     }
 }
 
@@ -207,8 +201,9 @@ void Application::render() {
             bullet.draw(window);
     }
     for(auto character : characters) {
-    	if(abs((int)character.i - (int)mainCharacter.i) < mainCharacter.coins) {
+    	if(abs(character.i - mainCharacter.i) + abs(character.j - mainCharacter.j) < mainCharacter.coins) {
         	character.draw(window);
+            carte[character.i][character.j] = NONE;
         }
     }
 

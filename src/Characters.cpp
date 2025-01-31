@@ -22,7 +22,8 @@ void Character::move(std::vector<std::vector<int>>& carte, int dx, int dy) {
             carte[i+dy][j+dx] = NONE;
             break;
         case GRAAL:
-            // Implement graal logic here
+            carte[i+dy][j+dx] = NONE;
+            cout<<"Vous avez gagné !"<<endl;
             break;
         default:
             break;

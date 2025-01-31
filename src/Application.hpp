@@ -5,8 +5,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Config.hpp>
-#include <SFML/Window/Event.hpp>
-#include <vector>
+#include <SFML/Window.hpp>
 
 #include "Characters.hpp"
 #include "utils.hpp"
@@ -54,7 +53,7 @@ class Application {
 
         Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory);
         ~Application();
-        
+
         void run();
 };
 
