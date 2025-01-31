@@ -24,7 +24,6 @@ class Application {
         std::vector<Character> characters;
         Character mainCharacter;
         vector<vector<int>> carte;
-
     private:
         sf::RenderWindow window;
         sf::Event e;

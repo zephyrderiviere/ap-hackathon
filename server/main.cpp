@@ -9,8 +9,7 @@
 using namespace std;
 
 static string const prefix = "[SERVER-INFO] ";
-static sf::Uint8 nextID = 0;
-static std::map<sf::IpAddress, sf::Uint8> players;
+static std::map<sf::IpAddress, std::pair<sf::Uint8, sf::Uint16>> players;
 
 void connectPlayer() {
 
@@ -27,6 +26,8 @@ void sendPosition() {
 
 
 int main(int argc, char** argv) {
+
+    sf::Int32 nextID = 0;
     sf::Uint16 port = 42069;
 
     if (argc > 1) {
@@ -54,39 +55,41 @@ int main(int argc, char** argv) {
             data >> message;
             
             if (message == "connecting") {
-                std::cout << prefix << message << '\n';
-
+                sf::Int32 id;
                 if (players.find(sender) == players.end()) {
-                    players.insert(std::pair(sender, nextID));
+                    players.insert(std::pair(sender, std::pair(nextID, remotePort)));
 
-                    p << nextID;
-                    nextID++;
+                    id = nextID;
                 } else {
-                    p << players.at(sender);
+                    id = players.at(sender).first;
                 }
-                server.send(p, sender, port);
+                p << id;
+                std::cout << prefix << sender << " is connecting with port " << remotePort << ". Assigning ID " << id << '\n';
+                server.send(p, sender, remotePort);
             }
 
 
             if (players.find(sender) == players.end()) {
                 continue;
             }
-            int senderID = players.at(sender);
+            int senderID = players.at(sender).first;
 
             if (message == "disconnecting") {
 
                 players.erase(sender);
                 p << "Successfully disconnected !";
-                server.send(p, sender, port);
+                server.send(p, sender, remotePort);
             
             }
 
-            if (data >> pos.x >> pos.y) {
-
-                p << pos.x << pos.y;
-                std::cout << prefix << "Player " << senderID << " is at " <<'(' << pos.x << ", " << pos.y << ")\n";
+            if (message == "position") {
+                sf::Int32 id;
+                data >> id >> pos.x >> pos.y;
+                std::cout << prefix << (int) id << ", " << sender << ", " << remotePort << '\n';
+                //std::cout << prefix << "Player " << senderID << " is at " <<'(' << pos.x << ", " << pos.y << ")\n";
+                p << id << pos.x << pos.y;
                 for (auto ip : players) {
-                    server.send(p, ip.first, port);
+                    server.send(p, ip.first, ip.second.second);
                 }
             }
 

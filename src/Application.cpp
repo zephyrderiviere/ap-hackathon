@@ -18,7 +18,9 @@ Application::Application(int const width, int const height, std::string title, s
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
     carte = lireNiveau(cheminNiveau);
 
-    socket.setBlocking(false);
+
+    mainCharacter = Character("Main", 100, 10, 5, 2, 2, 0);
+
     serveur = lireAdresseServeur(workingDirectory);
     connectToServer();
 }
@@ -56,6 +58,17 @@ void Application::connectToServer() {
 	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
 		std::cerr << "Erreur lors de l'envoi du message 1." << std::endl;
 	}
+
+    sf::IpAddress ip; sf::Uint16 port;
+    packet.clear();
+    if (socket.receive(packet, ip, port) != sf::Socket::Done) {
+        throw std::runtime_error("Unable to contact server properly");
+    }
+    packet >> mainCharacter.playerID; 
+    std::cout << (int) mainCharacter.playerID << '\n';
+
+
+    socket.setBlocking(false);
 }
 
 void Application::handleKeyReleases() {
@@ -115,23 +128,27 @@ void Application::update() {
     
     sf::IpAddress sender;
     sf::Uint16 remoteport;
-    if (socket.receive(p, sender, remoteport) == sf::Socket::Done) {
-        sf::Uint8 charID; p >> charID;
-        
-        cout<<"recu"<<endl;
-        
-        cout<<charID<<endl;
+    socket.receive(p, sender, remoteport);
+    //std::cout << sender << ", " << remoteport << '\n';
+
+    if (sender == serveur.ipAdresse) {
+        sf::Int32 charID; p >> charID;
+
+        //std::cout << (int) charID << '\n';
         
         sf::Vector2i charPos;
         if (p >> charPos.x >> charPos.y) {
             bool found = false;
             for (Character& c : characters) {
-                if (c.playerID == charID && charID != mainCharacter.playerID) {
+                if (c.playerID == charID) {
                     c.i = charPos.x; c.j = charPos.y;
                     found = true;
                 }
             }
-            if (!found) characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
+            if (!found && charID != mainCharacter.playerID) {
+                
+                characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
+            }
         }
     }
 }
@@ -197,6 +214,7 @@ void Application::run() {
                 default: break;
             }
         }
+        window.setFramerateLimit(60);
         update();
         render();
         sendDataToServeur();
