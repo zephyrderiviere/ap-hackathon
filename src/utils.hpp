@@ -32,6 +32,13 @@ enum MapCodes {
 	BULLET,
 };
 
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
 struct serveurInfo {
 	string ipAdresse;
 	int port;

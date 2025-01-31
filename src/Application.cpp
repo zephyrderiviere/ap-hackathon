@@ -39,6 +39,8 @@ void Application::handleKeyPresses() {
         case sf::Keyboard::Key::Down: mainCharacter.move(carte,0,1); break;
         case sf::Keyboard::Key::Left: mainCharacter.move(carte,-1,0); break;
         case sf::Keyboard::Key::Right: mainCharacter.move(carte,1,0); break;
+        // Handle main character attack
+        case sf::Keyboard::Key::Space: mainCharacter.attack(carte); break;
 
         default: break;
     }
@@ -108,6 +110,16 @@ void Application::multiPlayerMenu() {
 
 
 void Application::update() {
+
+    for (auto it = mainCharacter.bullets.begin(); it != mainCharacter.bullets.end(); ) {
+        int res = it->update(carte);
+        if (res == -1) {
+            it = mainCharacter.bullets.erase(it); // Erase the bullet and get the next iterator
+        } else {
+            ++it; // Move to the next bullet
+    }
+}
+
     sf::Packet p;
     p << "info" << mainCharacter.i << mainCharacter.j;
 
@@ -159,11 +171,11 @@ void Application::render() {
     	}
     }
 
-    for(auto character : characters) {
-        character.draw(window);
+    mainCharacter.draw(window);
+    for (auto bullet : mainCharacter.bullets) {
+            bullet.draw(window);
     }
 
-    mainCharacter.draw(window);
 
     window.display();
 }
