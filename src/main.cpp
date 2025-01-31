@@ -1,15 +1,16 @@
 #include "Application.hpp"
 #include <exception>
+#include "utils.hpp"
 
 
-int const width = 1200;
-int const height = 800;
+int const width = TAILLE_CASE*LARGEUR_NIVEAU;
+int const height = TAILLE_CASE*HAUTEUR_NIVEAU;
 std::string title = "Rogue Online";
 
 
 int main(int argc, char** argv) {
     try {
-        Application app(width, height, title);
+        Application app(width, height, title, "niveaux/niveau.lvl");
 
         app.run();
 

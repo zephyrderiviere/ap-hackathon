@@ -5,9 +5,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Config.hpp>
 #include <SFML/Window/Event.hpp>
+#include <vector>
 
-
-
+using namespace std;
 
 class Application {
     private:

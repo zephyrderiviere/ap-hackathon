@@ -3,8 +3,7 @@
 
 Application::Application(int const width, int const height, std::string title, std::string cheminNiveau) 
     : window(sf::VideoMode(width, height), title) {
-	carte = lireNiveau(cheminNiveau)
-        
+	carte = lireNiveau(cheminNiveau);
 }
 
 
@@ -52,6 +51,18 @@ void Application::update() {
 void Application::render() {
     window.clear();
     
+    for(int i=0; i<HAUTEUR_NIVEAU; i++) {
+    	for(int j=0; j<LARGEUR_NIVEAU; j++) {
+    		switch(carte[i][j]) {
+    			case(WALL):
+    				sf::RectangleShape rectangle({TAILLE_CASE, TAILLE_CASE});
+    				rectangle.setPosition(j*TAILLE_CASE, i*TAILLE_CASE);
+    				rectangle.setFillColor(sf::Color::Blue);
+    				window.draw(rectangle);
+    				break;
+    		}
+    	}
+    }
 
     window.display();
 }
