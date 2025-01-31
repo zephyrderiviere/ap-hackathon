@@ -38,7 +38,7 @@ vector<vector<int>> lireNiveau(std::string chemin) {
     	return niveau;
 }
 
-string lireAdresseServeur(std::string& workingDirectory) {
+serveurInfo lireAdresseServeur(std::string& workingDirectory) {
 
     	std::ifstream fichier(workingDirectory + "config.txt");
     	if (!fichier) {

@@ -11,7 +11,7 @@
 Application::Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory)
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
     carte = lireNiveau(cheminNiveau);
-    serveur = lireAdresseServeur();
+    serveur = lireAdresseServeur(workingDirectory);
 }
 
 
@@ -79,7 +79,7 @@ void Application::multiPlayerMenu() {
     for(int i=0; i<256; i++) {
         sprintf(address, "192.168.125.%d", i);
 
-        sf::IpAddress ipAddress(lireAdresseServeur(workingDirectory));
+        sf::IpAddress ipAddress(lireAdresseServeur(workingDirectory).ipAdresse);
         
         socket.send(p, ipAddress, port);
         sf::Uint16 remotePort;

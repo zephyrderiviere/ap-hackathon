@@ -17,10 +17,6 @@ void init(Application& app){
 }
 
 int main(int argc, char** argv) {       
-    
-        Application app(width, height, title, "niveaux/niveau.lvl");
-        init(app);
-
 
     int pos = std::string(argv[0]).find("bin/game");
     std::string mainDirectoryFilepath = std::string(argv[0]).substr(0, pos);

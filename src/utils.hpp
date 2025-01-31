@@ -39,6 +39,6 @@ struct serveurInfo {
 
 vector<vector<int>> lireNiveau(std::string chemin);
 
-serveurInfo lireAdresseServeur();
+serveurInfo lireAdresseServeur(std::string& workingDirectory);
 
 #endif //UTILS_HPP

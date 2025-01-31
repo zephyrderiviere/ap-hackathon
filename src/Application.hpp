@@ -22,7 +22,7 @@ class Application {
     public:
         std::vector<Character> characters;
         Character mainCharacter;
-        std::vector<std::vector<int>> carte;
+
     private:
         sf::RenderWindow window;
         sf::Event e;
