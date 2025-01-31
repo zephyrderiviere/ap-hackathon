@@ -1,4 +1,6 @@
 #include "Application.hpp"
+#include <SFML/Config.hpp>
+#include <SFML/Network.hpp>
 #include <exception>
 #include "utils.hpp"
 
@@ -10,16 +12,22 @@ std::string title = "Rogue Online";
 void init(Application& app){
     // Initialize the game
     // Add a main character
-    Character mainCharacter("Main", 100, 10, 5, 2, 2);
+    Character mainCharacter("Main", 100, 10, 5, 2, 2, 0);
     app.mainCharacter = mainCharacter;
 }
 
-int main(int argc, char** argv) {
-    try {
+int main(int argc, char** argv) {       
     
         Application app(width, height, title, "niveaux/niveau.lvl");
         init(app);
 
+
+    int pos = std::string(argv[0]).find("bin/game");
+    std::string mainDirectoryFilepath = std::string(argv[0]).substr(0, pos);
+
+    try {
+        Application app(width, height, title, "niveaux/niveau.lvl", mainDirectoryFilepath);
+        init(app);
         app.run();
 
     } catch (std::exception e) {

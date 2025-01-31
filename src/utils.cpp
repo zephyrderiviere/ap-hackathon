@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include <stdexcept>
 
 using namespace std;
 
@@ -6,7 +7,7 @@ vector<vector<int>> lireNiveau(std::string chemin) {
 
     std::ifstream fichier(chemin);
     if (!fichier) {
-    	std::cerr << "Erreur: Impossible d'ouvrir le fichier !" << std::endl;
+    	throw std::runtime_error("Erreur: Impossible d'ouvrir le fichier !");
     }
 
 	vector<vector<int>> niveau(HAUTEUR_NIVEAU, vector<int> (LARGEUR_NIVEAU));
@@ -37,9 +38,9 @@ vector<vector<int>> lireNiveau(std::string chemin) {
     	return niveau;
 }
 
-serveurInfo lireAdresseServeur() {
+string lireAdresseServeur(std::string& workingDirectory) {
 
-    	std::ifstream fichier("./config.txt");
+    	std::ifstream fichier(workingDirectory + "config.txt");
     	if (!fichier) {
     		std::cerr << "Erreur: Impossible d'ouvrir le fichier !" << std::endl;
     	}

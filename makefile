@@ -41,5 +41,9 @@ clean:
 # Règle pour recompiler tout le projet
 rebuild: clean all
 
+server:
+	$(CXX) $(CXXFLAGS) server/*.cpp $(SFML_LIBS) -o bin/server
+
+
 # Indique que les règles 'all', 'clean', et 'rebuild' ne sont pas des fichiers
-.PHONY: all clean rebuild
+.PHONY: all clean rebuild server
