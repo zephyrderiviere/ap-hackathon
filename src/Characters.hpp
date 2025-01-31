@@ -10,7 +10,7 @@
 class Character {
 public:
     // default constructor
-    Character() : name(""), hp(0), damage(0), defense(0), i(0), j(0), coins(0), playerID(-1) {};
+    Character() : name(""), hp(0), damage(0), defense(0), i(0), j(0), coins(5), playerID(-1) {};
     Character(std::string name, int hp, int attack, int defense, int i, int j, int coins, sf::Int32 playerID = -1) 
         : name(name), hp(hp), damage(attack), defense(defense), i(i), j(j), coins(coins), playerID(playerID) {};
 

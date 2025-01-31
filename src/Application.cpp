@@ -19,7 +19,7 @@ Application::Application(int const width, int const height, std::string title, s
     carte = lireNiveau(cheminNiveau);
 
 
-    mainCharacter = Character("Main", 100, 10, 5, 2, 2, 0);
+    mainCharacter = Character("Main", 100, 10, 5, 2, 2, 5);
 
     serveur = lireAdresseServeur(workingDirectory);
     connectToServer();
@@ -31,6 +31,7 @@ Application::Application(int const width, int const height, std::string title, s
 
 
 void Application::handleKeyPresses() {
+sendDataToServeur();
     switch(e.key.code) {
         // Handle main character movement
         case sf::Keyboard::Key::Up: mainCharacter.move(carte,0,-1); break;
@@ -184,9 +185,11 @@ void Application::render() {
     	}
     }
 
-    /*for(auto character : characters) {
-        character.draw(window);
-    }*/
+    for(auto character : characters) {
+    	if(abs((int)character.i - (int)mainCharacter.i) < mainCharacter.coins) {
+        	character.draw(window);
+        }
+    }
 
     mainCharacter.draw(window);
 
@@ -217,6 +220,5 @@ void Application::run() {
         window.setFramerateLimit(60);
         update();
         render();
-        sendDataToServeur();
     }
 }
