@@ -7,9 +7,13 @@
 #include <SFML/Window/Event.hpp>
 #include <vector>
 
+#include "Characters.hpp"
+
 using namespace std;
 
 class Application {
+    public:
+        std::vector<Character> characters;
     private:
         sf::RenderWindow window;
         sf::Event e;

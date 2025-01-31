@@ -45,11 +45,14 @@ void Application::handleMouseButtonReleases() {
 
 
 void Application::update() {
-    
 }
 
 void Application::render() {
     window.clear();
+    // Loop over characters and draw them
+    for(auto& c : characters) {
+        c.draw(window);
+    }
     
     for(int i=0; i<HAUTEUR_NIVEAU; i++) {
     	for(int j=0; j<LARGEUR_NIVEAU; j++) {
