@@ -37,3 +37,18 @@ vector<vector<int>> lireNiveau(std::string chemin) {
     	fichier.close();
     	return niveau;
 }
+
+string lireAdresseServeur() {
+
+    	std::ifstream fichier("./config.txt");
+    	if (!fichier) {
+    		std::cerr << "Erreur: Impossible d'ouvrir le fichier !" << std::endl;
+    	}
+    	
+    	string adresseServeur;
+    	std::getline(fichier, adresseServeur);
+
+    	fichier.close();
+    	
+    	return adresseServeur;
+}

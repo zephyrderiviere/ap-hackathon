@@ -20,7 +20,6 @@ class Application {
         sf::RenderWindow window;
         sf::Event e;
 
-
         void handleKeyPresses();
         void handleKeyReleases();
         void handleMouseMotion();
