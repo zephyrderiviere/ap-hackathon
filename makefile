@@ -2,13 +2,13 @@
 CXX = g++
 
 # Options de compilation
-CXXFLAGS = 
+CXXFLAGS = -O2
 
 # Bibliothèques SFML
 SFML_LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network
 
 # Répertoire des fichiers sources
-SRC_DIR = .
+SRC_DIR = src
 
 # Répertoire des fichiers objets
 OBJ_DIR = obj
@@ -20,7 +20,7 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
 # Nom de l'exécutable final
-TARGET = game
+TARGET = bin/game
 
 # Règle par défaut
 all: $(TARGET)
