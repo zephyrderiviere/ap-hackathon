@@ -7,9 +7,23 @@ void Character::move(std::vector<std::vector<int>>& map, int dx, int dy) {
     if(i+dy < 0 || i+dy >= HAUTEUR_NIVEAU || j+dx < 0 || j+dx >= LARGEUR_NIVEAU) {
         return;
     }
-    // // Move the character only if no collision 
-    if(map[i+dy][j+dx] == WALL) {
-        return;
+    // // Move the character only if no collision
+    switch(map[i+dy][j+dx]) {
+        case WALL:
+            return;
+        case POTION:
+            hp += 1;
+            map[i+dy][j+dx] = NONE;
+            break;
+        case COIN:
+            coins += 1;
+            map[i+dy][j+dx] = NONE;
+            break;
+        case GRAAL:
+            // Implement graal logic here
+            break;
+        default:
+            break;
     }
     
     i += dy;
