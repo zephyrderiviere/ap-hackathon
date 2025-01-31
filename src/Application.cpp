@@ -1,5 +1,8 @@
 #include "Application.hpp"
+#include "Combat.hpp"
 #include "Networking.hpp"
+#include <SFML/Network/Packet.hpp>
+#include <SFML/System/Vector2.hpp>
 
 using namespace std;
 
@@ -32,8 +35,14 @@ void Application::sendDataToServeur() {
 	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
 		std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
 	}
+}
 
-    //TODO send bullet info to server (if created)
+void Application::sendBulletToServer() {
+    sf::Packet packet;
+    packet << "bullet" << mainCharacter.i << mainCharacter.j << mainCharacter.direction << 1;
+    if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+		std::cerr << "Erreur lors de l'envoi de BULLET" << '\n';
+	}
 }
 
 void Application::connectToServer() {
@@ -65,7 +74,12 @@ void Application::handleKeyPresses() {
         case sf::Keyboard::Key::Left: mainCharacter.move(carte,-1,0); break;
         case sf::Keyboard::Key::Right: mainCharacter.move(carte,1,0); break;
         // Handle main character attack
-        case sf::Keyboard::Key::Space: mainCharacter.attack(carte); break;
+        case sf::Keyboard::Key::Space: {
+            mainCharacter.attack(carte); 
+            //Send bullet to server
+            sendBulletToServer();
+            break;
+        }
         
         default: break;
     }
@@ -161,7 +175,12 @@ void Application::update() {
         }
     }
     if (message == "bullet") {
-        //TODO
+        sf::Vector2i bullerPos;
+        int direction, speed;
+
+        if (p >> bullerPos.x >> bullerPos.y >> direction >> speed) {
+            mainCharacter.bullets.push_back(Bullet(bullerPos, direction, speed, 1));
+        }
     }
 }
 
@@ -201,7 +220,7 @@ void Application::render() {
             bullet.draw(window);
     }
     for(auto character : characters) {
-    	if(abs(character.i - mainCharacter.i) + abs(character.j - mainCharacter.j) < mainCharacter.coins) {
+    	if(abs(character.i - mainCharacter.i) < mainCharacter.coins || abs(character.j - mainCharacter.j) < mainCharacter.coins) {
         	character.draw(window);
             carte[character.i][character.j] = NONE;
         }

@@ -30,13 +30,12 @@ public:
     sf::Int32 i;
     sf::Int32 j;
     int coins;
+    int direction;
 
 private:
     int hp;
     int damage;
     int defense;
-    int direction;
-
 };
 
 #endif // CHARACTERS_HPP

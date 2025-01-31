@@ -45,6 +45,7 @@ class Application {
         void update();
         void render();
         void sendDataToServeur();
+        void sendBulletToServer();
         void connectToServer();
 	
 	serveurInfo serveur;
