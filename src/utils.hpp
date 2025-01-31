@@ -16,7 +16,8 @@ using namespace std;
 enum FileCharacters {
 	WALL_CHAR = 'x',
 	POTION_CHAR = 'p',
-	COIN_CHAR = 'c'
+	COIN_CHAR = 'c',
+	GRAAL_CHAR = 'G'
 };
 
 
@@ -25,6 +26,7 @@ enum MapCodes {
 	WALL,
 	POTION,
 	COIN,
+	GRAAL,
 	PLAYER,
 	ENEMY,
 	ALLY,

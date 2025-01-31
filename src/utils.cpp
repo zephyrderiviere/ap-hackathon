@@ -26,6 +26,9 @@ vector<vector<int>> lireNiveau(std::string chemin) {
         			case(COIN_CHAR):
         				niveau[i][j] = COIN;
         				break;
+        			case(GRAAL_CHAR):
+        				niveau[i][j] = GRAAL;
+        				break;
         		}
         	}
         	i++;

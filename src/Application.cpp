@@ -69,6 +69,9 @@ void Application::render() {
     			case(COIN):
     				rectangle.setFillColor(sf::Color::Yellow);
     				break;
+    			case(GRAAL):
+    				rectangle.setFillColor(sf::Color(100, 0, 100));
+    				break;
     		}
     		window.draw(rectangle);
     	}
