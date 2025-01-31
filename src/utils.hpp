@@ -15,13 +15,16 @@ using namespace std;
 
 enum FileCharacters {
 	WALL_CHAR = 'x',
-
+	POTION_CHAR = 'p',
+	COIN_CHAR = 'c'
 };
 
 
 enum MapCodes {
 	NONE,
 	WALL,
+	POTION,
+	COIN,
 	PLAYER,
 	ENEMY,
 	ALLY,

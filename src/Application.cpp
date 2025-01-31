@@ -53,14 +53,21 @@ void Application::render() {
     
     for(int i=0; i<HAUTEUR_NIVEAU; i++) {
     	for(int j=0; j<LARGEUR_NIVEAU; j++) {
+    		sf::RectangleShape rectangle({TAILLE_CASE, TAILLE_CASE});
+    		rectangle.setPosition(j*TAILLE_CASE, i*TAILLE_CASE);
+    		rectangle.setFillColor(sf::Color::Black);
     		switch(carte[i][j]) {
     			case(WALL):
-    				sf::RectangleShape rectangle({TAILLE_CASE, TAILLE_CASE});
-    				rectangle.setPosition(j*TAILLE_CASE, i*TAILLE_CASE);
     				rectangle.setFillColor(sf::Color::Blue);
-    				window.draw(rectangle);
+    				break;
+    			case(POTION):
+    				rectangle.setFillColor(sf::Color::Red);
+    				break;
+    			case(COIN):
+    				rectangle.setFillColor(sf::Color::Yellow);
     				break;
     		}
+    		window.draw(rectangle);
     	}
     }
 
