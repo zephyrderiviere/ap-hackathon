@@ -40,8 +40,6 @@ void Application::connectToServer() {
 	sf::Packet packet;
 	packet << "connecting";
 
-    socket.setBlocking(false);
-
 	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
 		std::cerr << "Erreur lors de l'envoi du message 1." << std::endl;
 	}
@@ -55,6 +53,7 @@ void Application::connectToServer() {
     std::cout << (int) mainCharacter.playerID << '\n';
 
 
+    socket.setBlocking(false);
 }
 
 void Application::handleKeyPresses() {

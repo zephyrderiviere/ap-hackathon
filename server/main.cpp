@@ -78,9 +78,7 @@ int main(int argc, char** argv) {
             if (message == "disconnecting") {
                 
                 players.erase(sender);
-                std::cout << prefix << "Player" << senderID << " has successfully disconnected !\n";
-                
-            
+                std::cout << prefix << "Player " << senderID << " has successfully disconnected !\n";
             }
 
             if (message == "position") {
@@ -100,7 +98,17 @@ int main(int argc, char** argv) {
                 std::cout << prefix << (int) senderID << " shot a bullet at " << pos.x << pos.y << " towards " << direction << " with speed " << speed << '\n';
                 p << "bullet" << pos.x << pos.y << direction << speed;
                 for (auto ip : players) {
-                    server.send(p, ip.first, ip.second.second);
+                    if (ip.second.first != senderID) server.send(p, ip.first, ip.second.second);
+                }
+            }
+
+            if (message == "bullet") {
+                sf::Int32 direction, speed;
+                data >> pos.x >> pos.y >> direction >> speed;
+                std::cout << prefix << (int) senderID << " shot a bullet at " << pos.x << pos.y << " towards " << direction << " with speed " << speed << '\n';
+                p << "bullet" << pos.x << pos.y << direction << speed;
+                for (auto ip : players) {
+                    if (ip.second.first != senderID) server.send(p, ip.first, ip.second.second);
                 }
             }
 
