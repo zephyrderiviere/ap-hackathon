@@ -11,7 +11,7 @@ public:
     Character(std::string name, int hp, int attack, int defense, int i, int j) 
         : name(name), hp(hp), damage(attack), defense(defense), i(i), j(j) {};
 
-    void move(int dx, int dy);
+    void move(std::vector<std::vector<int>>& map, int dx, int dy);
     void attack();
     void defend();
     void useItem();

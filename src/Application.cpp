@@ -14,10 +14,10 @@ Application::Application(int const width, int const height, std::string title, s
 void Application::handleKeyPresses() {
     switch(e.key.code) {
         // Handle main character movement
-        case sf::Keyboard::Key::Up: mainCharacter.move(-1, 0); break;
-        case sf::Keyboard::Key::Down: mainCharacter.move(1, 0); break;
-        case sf::Keyboard::Key::Left: mainCharacter.move(0, -1); break;
-        case sf::Keyboard::Key::Right: mainCharacter.move(0, 1); break;
+        case sf::Keyboard::Key::Up: mainCharacter.move(carte,0,-1); break;
+        case sf::Keyboard::Key::Down: mainCharacter.move(carte,0,1); break;
+        case sf::Keyboard::Key::Left: mainCharacter.move(carte,-1,0); break;
+        case sf::Keyboard::Key::Right: mainCharacter.move(carte,1,0); break;
 
         default: break;
     }

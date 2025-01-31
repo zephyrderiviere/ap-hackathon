@@ -15,11 +15,11 @@ class Application {
     public:
         std::vector<Character> characters;
         Character mainCharacter;
+        std::vector<std::vector<int>> carte;
     private:
         sf::RenderWindow window;
         sf::Event e;
 
-        std::vector<std::vector<int>> map;
 
         void handleKeyPresses();
         void handleKeyReleases();
@@ -29,8 +29,6 @@ class Application {
 
         void update();
         void render();
-
-	vector<vector<int>> carte;
 
     public:
 
