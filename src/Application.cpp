@@ -25,13 +25,21 @@ Application::Application(int const width, int const height, std::string title, s
     connectToServer();
 }
 
+Application::~Application() {
+    sf::Packet p;
+    p << "disconnecting";
+    if (socket.send(p, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+        std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
+    }
+}
+
 
 /***********************EVENT HANDLERS******************************/
 
 
 
 void Application::handleKeyPresses() {
-sendDataToServeur();
+    sendDataToServeur();
     switch(e.key.code) {
         // Handle main character movement
         case sf::Keyboard::Key::Up: mainCharacter.move(carte,0,-1); break;
@@ -134,8 +142,6 @@ void Application::update() {
 
     if (sender == serveur.ipAdresse) {
         sf::Int32 charID; p >> charID;
-
-        //std::cout << (int) charID << '\n';
         
         sf::Vector2i charPos;
         if (p >> charPos.x >> charPos.y) {
@@ -147,7 +153,6 @@ void Application::update() {
                 }
             }
             if (!found && charID != mainCharacter.playerID) {
-                
                 characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
             }
         }

@@ -60,6 +60,7 @@ int main(int argc, char** argv) {
                     players.insert(std::pair(sender, std::pair(nextID, remotePort)));
 
                     id = nextID;
+                    nextID++;
                 } else {
                     id = players.at(sender).first;
                 }
@@ -75,17 +76,17 @@ int main(int argc, char** argv) {
             int senderID = players.at(sender).first;
 
             if (message == "disconnecting") {
-
+                
                 players.erase(sender);
-                p << "Successfully disconnected !";
-                server.send(p, sender, remotePort);
+                std::cout << prefix << senderID << " has successfully disconnected !\n";
+                
             
             }
 
             if (message == "position") {
                 sf::Int32 id;
                 data >> id >> pos.x >> pos.y;
-                std::cout << prefix << (int) id << ", " << sender << ", " << remotePort << '\n';
+                //std::cout << prefix << (int) id << ", " << sender << ", " << remotePort << '\n';
                 //std::cout << prefix << "Player " << senderID << " is at " <<'(' << pos.x << ", " << pos.y << ")\n";
                 p << id << pos.x << pos.y;
                 for (auto ip : players) {

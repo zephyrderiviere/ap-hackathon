@@ -53,7 +53,8 @@ class Application {
     public:
 
         Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory);
-
+        ~Application();
+        
         void run();
 };
 
