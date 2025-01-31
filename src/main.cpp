@@ -1,4 +1,6 @@
 #include "Application.hpp"
+#include <SFML/Config.hpp>
+#include <SFML/Network.hpp>
 #include <exception>
 #include "utils.hpp"
 
@@ -14,14 +16,17 @@ void init(Application& app){
     app.mainCharacter = mainCharacter;
 }
 
-int main(int argc, char** argv) {
-    try {
+int main(int argc, char** argv) {       
     
-    	cout<<lireAdresseServeur()<<endl;
-    
-        Application app(width, height, title, "niveaux/niveau.lvl");
-        init(app);
 
+
+    int pos = std::string(argv[0]).find("bin/game");
+    std::string mainDirectoryFilepath = std::string(argv[0]).substr(0, pos);
+
+    try {
+        cout<<lireAdresseServeur()<<endl;
+        Application app(width, height, title, "niveaux/niveau.lvl", mainDirectoryFilepath);
+        init(app);
         app.run();
 
     } catch (std::exception e) {

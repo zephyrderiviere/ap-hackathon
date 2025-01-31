@@ -1,9 +1,17 @@
 #include "Application.hpp"
 #include "utils.hpp"
+#include "Networking.hpp"
+#include <SFML/Config.hpp>
+#include <SFML/Network.hpp>
+#include <cstdio>
+#include <iostream>
+#include <stdexcept>
 
-Application::Application(int const width, int const height, std::string title, std::string cheminNiveau) 
-    : window(sf::VideoMode(width, height), title) {
-	carte = lireNiveau(cheminNiveau);
+
+Application::Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory)
+    : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
+
+    map = lireNiveau(cheminNiveau);
 }
 
 
@@ -45,7 +53,39 @@ void Application::handleMouseButtonReleases() {
 /********************RENDER AND MAIN LOOP***************************/
 
 
+void Application::multiPlayerMenu() {
+    char address[10000];
+    sf::UdpSocket socket;
+    socket.setBlocking(false);
+    sf::Font f;
+    if (!f.loadFromFile(workingDirectory + "data/Movistar.ttf")) {
+        throw std::runtime_error("Failed to load data/Movistar.ttf");
+    }
+
+    sf::Packet p;
+    p << "connecting";
+
+    for(int i=0; i<256; i++) {
+        sprintf(address, "192.168.125.%d", i);
+
+        sf::IpAddress ipAddress("address");
+        
+        socket.send(p, ipAddress, port);
+        sf::Uint16 remotePort;
+        if (socket.receive(p, ipAddress, remotePort) == sf::Socket::Done) {
+            //std::cout << p;
+            std::cout << "!!!\n";
+            sf::Text text("Remote server : " + std::string(address), f);
+            text.setFillColor(sf::Color::White);
+            text.setPosition((sf::Vector2f) (window.getSize() / 2u + (unsigned) i * sf::Vector2u(0, 1)));
+            window.draw(text);
+        }
+    }
+}
+
+
 void Application::update() {
+    
 }
 
 void Application::render() {
