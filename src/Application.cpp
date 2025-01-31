@@ -1,9 +1,9 @@
 #include "Application.hpp"
+#include "utils.hpp"
 
-
-Application::Application(int const width, int const height, std::string title) 
+Application::Application(int const width, int const height, std::string title, std::string cheminNiveau) 
     : window(sf::VideoMode(width, height), title) {
-
+	carte = lireNiveau(cheminNiveau)
         
 }
 

@@ -26,11 +26,11 @@ class Application {
         void update();
         void render();
 
-
+	vector<vector<int>> carte;
 
     public:
 
-        Application(int const width, int const height, std::string title);
+        Application(int const width, int const height, std::string title, std::string cheminNiveau);
 
         void run();
 };
