@@ -1,14 +1,48 @@
 #include "Application.hpp"
-#include <SFML/Window/Event.hpp>
-#include <SFML/Window/VideoMode.hpp>
-#include <SFML/Window/Window.hpp>
 
 
 Application::Application(int const width, int const height, std::string title) 
     : window(sf::VideoMode(width, height), title) {
 
+        
+}
+
+
+/***********************EVENT HANDLERS******************************/
+
+
+
+void Application::handleKeyPresses() {
+    switch(e.key.code) {
+        case sf::Keyboard::Key::E: {
+            printf("exemple !\n");
+            break;
+        }
+
+        default: break;
+    }
+}
+
+void Application::handleKeyReleases() {
 
 }
+
+void Application::handleMouseMotion() {
+
+}
+
+void Application::handleMouseButtonPresses() {
+
+}
+
+void Application::handleMouseButtonReleases() {
+
+}
+
+
+
+
+/********************RENDER AND MAIN LOOP***************************/
 
 
 void Application::render() {
@@ -39,6 +73,7 @@ void Application::run() {
                 default: break;
             }
         }
+        update();
         render();
     }
 }

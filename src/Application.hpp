@@ -1,9 +1,10 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include <SFML/Window/Event.hpp>
 #ifdef __linux__ 
     #include <SFML/Graphics.hpp>
+    #include <SFML/Config.hpp>
+    #include <SFML/Window/Event.hpp>
 #elif _WIN32
 
 #else 
@@ -19,7 +20,6 @@ class Application {
         sf::RenderWindow window;
         sf::Event e;
 
-        void render();
 
         void handleKeyPresses();
         void handleKeyReleases();
@@ -27,17 +27,16 @@ class Application {
         void handleMouseButtonPresses();
         void handleMouseButtonReleases();
 
+        void update();
+        void render();
+
 
 
     public:
 
-        
         Application(int const width, int const height, std::string title);
 
-
         void run();
-
-
 };
 
 
