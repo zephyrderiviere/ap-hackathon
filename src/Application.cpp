@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <string>
 
+using namespace std;
 
 Application::Application(int const width, int const height, std::string title, std::string cheminNiveau, std::string& workingDirectory)
     : window(sf::VideoMode(width, height), title), workingDirectory(workingDirectory) {
@@ -42,9 +43,9 @@ void Application::handleKeyPresses() {
 void Application::sendDataToServeur() {
 
     sf::Packet packet;
-    packet << "info" << mainCharacter.i << mainCharacter.j;
+    packet << "position" << mainCharacter.playerID << mainCharacter.i << mainCharacter.j;
 	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
-		std::cerr << "Erreur lors de l'envoi du message." << std::endl;
+		std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
 	}
 }
 
@@ -53,7 +54,7 @@ void Application::connectToServer() {
 	packet << "connecting";
 
 	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
-		std::cerr << "Erreur lors de l'envoi du message." << std::endl;
+		std::cerr << "Erreur lors de l'envoi du message 1." << std::endl;
 	}
 }
 
@@ -115,7 +116,11 @@ void Application::update() {
     sf::IpAddress sender;
     sf::Uint16 remoteport;
     if (socket.receive(p, sender, remoteport) == sf::Socket::Done) {
-        int charID; p >> charID;
+        sf::Uint8 charID; p >> charID;
+        
+        cout<<"recu"<<endl;
+        
+        cout<<charID<<endl;
         
         sf::Vector2i charPos;
         if (p >> charPos.x >> charPos.y) {
@@ -129,7 +134,6 @@ void Application::update() {
             if (!found) characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
         }
     }
-
 }
 
 void Application::render() {
@@ -139,28 +143,33 @@ void Application::render() {
     	for(int j=0; j<LARGEUR_NIVEAU; j++) {
     		sf::RectangleShape rectangle({TAILLE_CASE, TAILLE_CASE});
     		rectangle.setPosition(j*TAILLE_CASE, i*TAILLE_CASE);
-    		rectangle.setFillColor(sf::Color::Black);
-    		switch(carte[i][j]) {
-    			case(WALL):
-    				rectangle.setFillColor(sf::Color::Blue);
-    				break;
-    			case(POTION):
-    				rectangle.setFillColor(sf::Color::Red);
-    				break;
-    			case(COIN):
-    				rectangle.setFillColor(sf::Color::Yellow);
-    				break;
-    			case(GRAAL):
-    				rectangle.setFillColor(sf::Color(100, 0, 100));
-    				break;
-    		}
+    		if(abs((int)i-(int)mainCharacter.i) < mainCharacter.coins && abs((int)j-(int)mainCharacter.j) < mainCharacter.coins) {
+    			rectangle.setFillColor(sf::Color::Black);
+	    		switch(carte[i][j]) {
+	    			case(WALL):
+	    				rectangle.setFillColor(sf::Color::Blue);
+	    				break;
+	    			case(POTION):
+	    				rectangle.setFillColor(sf::Color::Red);
+	    				break;
+	    			case(COIN):
+	    				rectangle.setFillColor(sf::Color::Yellow);
+	    				break;
+	    			case(GRAAL):
+	    				rectangle.setFillColor(sf::Color(100, 0, 100));
+	    				break;
+	    		}
+	    	}
+	    	else {
+	    		rectangle.setFillColor(sf::Color(100, 100, 100));
+	    	}
     		window.draw(rectangle);
     	}
     }
 
-    for(auto character : characters) {
+    /*for(auto character : characters) {
         character.draw(window);
-    }
+    }*/
 
     mainCharacter.draw(window);
 

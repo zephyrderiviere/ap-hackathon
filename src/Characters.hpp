@@ -10,9 +10,9 @@
 class Character {
 public:
     // default constructor
-    Character() : name(""), hp(0), damage(0), defense(0), i(0), j(0), coins(0), playerID(-1) {};
+    Character() : name(""), hp(0), damage(0), defense(0), i(0), j(0), coins(5), playerID(-1) {};
     Character(std::string name, int hp, int attack, int defense, int i, int j, int coins, sf::Uint8 playerID = -1) 
-        : name(name), hp(hp), damage(attack), defense(defense), i(i), j(j), coins(coins), playerID(playerID) {};
+        : name(name), hp(hp), damage(attack), defense(defense), i(i), j(j), coins(5), playerID(playerID) {};
 
     void move(std::vector<std::vector<int>>& map, int dx, int dy);
     void attack();
@@ -25,12 +25,12 @@ public:
     sf::Int8 playerID;
     sf::Uint32 i;
     sf::Uint32 j;
+    int coins;
 
 private:
     int hp;
     int damage;
     int defense;
-    int coins;
 };
 
 #endif // CHARACTERS_HPP
