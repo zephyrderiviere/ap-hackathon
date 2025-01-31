@@ -9,7 +9,7 @@
 using namespace std;
 
 static string const prefix = "[SERVER-INFO] ";
-static std::map<sf::IpAddress, std::pair<sf::Uint8, sf::Uint16>> players;
+static std::map<sf::IpAddress, std::pair<sf::Int32, sf::Uint16>> players;
 
 void connectPlayer() {
 
@@ -88,7 +88,17 @@ int main(int argc, char** argv) {
                 data >> id >> pos.x >> pos.y;
                 //std::cout << prefix << (int) id << ", " << sender << ", " << remotePort << '\n';
                 //std::cout << prefix << "Player " << senderID << " is at " <<'(' << pos.x << ", " << pos.y << ")\n";
-                p << id << pos.x << pos.y;
+                p << "position" << id << pos.x << pos.y;
+                for (auto ip : players) {
+                    if (ip.second.first != senderID) server.send(p, ip.first, ip.second.second);
+                }
+            }
+
+            if (message == "bullet") {
+                sf::Int32 direction, speed;
+                data >> pos.x >> pos.y >> direction >> speed;
+                std::cout << prefix << (int) senderID << " shot a bullet at " << pos.x << pos.y << " towards " << direction << " with speed " << speed << '\n';
+                p << "bullet" << pos.x << pos.y << direction << speed;
                 for (auto ip : players) {
                     server.send(p, ip.first, ip.second.second);
                 }

@@ -25,6 +25,37 @@ Application::~Application() {
 /***********************EVENT HANDLERS******************************/
 
 
+void Application::sendDataToServeur() {
+
+    sf::Packet packet;
+    packet << "position" << mainCharacter.playerID << mainCharacter.i << mainCharacter.j;
+	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+		std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
+	}
+
+    //TODO send bullet info to server (if created)
+}
+
+void Application::connectToServer() {
+	sf::Packet packet;
+	packet << "connecting";
+
+    socket.setBlocking(false);
+
+	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
+		std::cerr << "Erreur lors de l'envoi du message 1." << std::endl;
+	}
+
+    sf::IpAddress ip; sf::Uint16 port;
+    packet.clear();
+    if (socket.receive(packet, ip, port) != sf::Socket::Done) {
+        throw std::runtime_error("Unable to contact server properly\n");
+    }
+    packet >> mainCharacter.playerID; 
+    std::cout << (int) mainCharacter.playerID << '\n';
+
+
+}
 
 void Application::handleKeyPresses() {
     sendDataToServeur();
@@ -37,35 +68,6 @@ void Application::handleKeyPresses() {
 
         default: break;
     }
-}
-
-void Application::sendDataToServeur() {
-
-    sf::Packet packet;
-    packet << "position" << mainCharacter.playerID << mainCharacter.i << mainCharacter.j;
-	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
-		std::cerr << "Erreur lors de l'envoi du message 2." << std::endl;
-	}
-}
-
-void Application::connectToServer() {
-	sf::Packet packet;
-	packet << "connecting";
-
-	if (socket.send(packet, serveur.ipAdresse, serveur.port) != sf::Socket::Done) {
-		std::cerr << "Erreur lors de l'envoi du message 1." << std::endl;
-	}
-
-    sf::IpAddress ip; sf::Uint16 port;
-    packet.clear();
-    if (socket.receive(packet, ip, port) != sf::Socket::Done) {
-        throw std::runtime_error("Unable to contact server properly");
-    }
-    packet >> mainCharacter.playerID; 
-    std::cout << (int) mainCharacter.playerID << '\n';
-
-
-    socket.setBlocking(false);
 }
 
 void Application::handleKeyReleases() {
@@ -128,7 +130,9 @@ void Application::update() {
     socket.receive(p, sender, remoteport);
     //std::cout << sender << ", " << remoteport << '\n';
 
-    if (sender == serveur.ipAdresse) {
+    if (sender != serveur.ipAdresse) return;
+    std::string message; p >> message;
+    if (message == "position") {
         sf::Int32 charID; p >> charID;
         
         sf::Vector2i charPos;
@@ -144,6 +148,9 @@ void Application::update() {
                 characters.push_back(Character("Player" + std::to_string(charID), 100, 10, 10, charPos.x, charPos.y, 0, charID));
             }
         }
+    }
+    if (message == "bullet") {
+        //TODO
     }
 }
 
